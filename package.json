@@ -1,0 +1,23 @@
+{
+	"name"           : "lean-g-debugger-client",
+	"version"        : "0.0.1",
+	"description"    : "database session for lean-g",
+	"author"         : "GongT <gongteng524702837@gmail.com>",
+	"scripts"        : {},
+	"main"           : "./index.js",
+	"repository"     : {
+		"type": "git",
+		"url" : "http://git.coding.net/GongT/lean-g-database-session.git"
+	},
+	"keywords"       : [
+		"lean", "leancloud", "avos", "avoscloud", "framework"
+	],
+	"dependencies"   : {
+		"on-headers": "~1.0.0"
+	},
+	"devDependencies": {
+		"cookie-parser": "*"
+	},
+	"analyze"        : true,
+	"license"        : "MIT"
+}
