@@ -12,7 +12,7 @@ $ npm install cookie-parser lean-g-database-session
 ```
 
 ## 如何使用
-##### 1.加载中间件
+### 1.加载中间件
 
 ```javascript
 var cookieSignKey = "secret string here";
@@ -34,10 +34,10 @@ var sessionConfig = {
 var databaseName = 'SessionStorage';
 app.use(require('lean-g-database-session')(databaseName, sessionConfig));
 ```
-##### 2.创建数据库
+### 2.创建数据库
 本例中数据库名为 SessionStorage。去后台创建SessionStorage数据库，不需要进行任何其他设置。
 
-##### 2.参数说明
+### 2.参数说明
 * **name:** cookie中的变量名
 * **requestVarName:** 请求时引用session的变量名。默认 req.session。如果你需要和其他session插件共用。则可以修改这个参数防止冲突
 * **autoStart:** 是否自动请求数据库获取session，类似avos-express-cookie-session的fetchUser。非常浪费资源，不推荐使用，建议只有需要的时候手动开始session。
@@ -49,26 +49,26 @@ app.use(require('lean-g-database-session')(databaseName, sessionConfig));
 * **httponly:** 是否允许javascript、flash等脚本访问这个cookie，因为id是随机字符串，通常不会需要js操作，所以建议设为默认的true
 * **maxAge:** cookie保存时间，**单位是天，单位是天，单位是天**，因为很重要所以说三遍，超过这个时间的session会自动作废。如果设为0，则用户关闭浏览器后session自动作废。
 
-##### 3.API
-### session.sessionStart(newId)
+### 3.API
+##### session.sessionStart(newId)
 开始一个session，并设置cookie变量为newId，默认会自动生成一个很长的字符串。
 
-### session.sessionDestroy(noDestroyCookie)  
+##### session.sessionDestroy(noDestroyCookie)  
 废弃一个session。如果noDestroyCookie设为true，则只是删除所有变量，不真的删除session。
 
-### session.sessionFlush()
+##### session.sessionFlush()
 保存session到数据库，并自动按需要调用sessionFlushCookie`
 
-### session.sessionFlushCookie(force)
+##### session.sessionFlushCookie(force)
 如果cookie里还没有session id，则发送一个setCookie头。
 如果force设为true，则无论如何都发送setCookie，这可以顺延当前session的过期时间
 
-### session.raw()
+##### session.raw()
 为了防止扰民，session对象重写了inspect和toString。这不影响for-in语句。
 但如果开发时想要看看session的具体内容，则可以通过这个函数获取。
 **除了开发以外不要用**。
 
-##### 4.实例
+### 4.实例
 ```javascript
 // 最基本的用法 - 设置一个变量，然后读取它
 app.get('/some/path', function (req,res){
