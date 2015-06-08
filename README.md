@@ -3,7 +3,7 @@
 lean-g-database-session
 
 ## 最新版本
-0.0.1
+0.0.3
 
 ## 安装方法
 
