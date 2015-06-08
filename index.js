@@ -35,7 +35,7 @@ function DataBaseSession(database, _options){
 	COOKIE.domain = COOKIE.domain || undefined;
 	COOKIE.signed = COOKIE.signed === undefined? true : COOKIE.signed;
 	COOKIE.secure = COOKIE.secure || false;
-	COOKIE.httponly = false;
+	COOKIE.httponly = COOKIE.httponly === undefined? true : COOKIE.httponly;
 	if(hasOwn.call(COOKIE, 'maxAge')){
 		COOKIE.maxAge = 1000*60*60*24*COOKIE.maxAge;
 		if(isNaN(COOKIE.maxAge)){
@@ -44,6 +44,10 @@ function DataBaseSession(database, _options){
 	}
 	
 	return function (req, rsp, next){
+		if(req[options.requestVarName]){
+			console.error('database-session: session is already created.');
+			return next();
+		}
 		req[options.requestVarName] = new Session(req, rsp, options);
 		
 		if(autoStart){
@@ -69,23 +73,29 @@ function Session(req, rsp, options){
 		configurable: false
 	});
 }
-/*
- Session.prototype = {
- inspect : function (){
- return '[LeanDatabaseSession ' + (this._options.started? 'Started' : 'NotInit') +
- ' #' + this._options.name + ']';
- },
- toJSON  : function (){
- return {};
- },
- toString: function (){
- return '[Object SessionData]';
- },
- dump    : function (){
- return JSON.stringify(this);
- }
- };
- */
+
+Session.prototype = {
+	inspect : function (){
+		return '[LeanDatabaseSession ' + (this._options.started? 'Started' : 'NotInit') +
+		       ' #' + this._options.name + ']';
+	},
+	toJSON  : function (){
+		return {};
+	},
+	toString: function (){
+		return '[Object SessionData]';
+	},
+	raw    : function (){
+		var ret = {};
+		for(var i in this){
+			if(hasOwn.call(this, i)){
+				ret[i] = this[i];
+			}
+		}
+		return ret;
+	}
+};
+
 Session.prototype.sessionFlushCookie = function sessionFlush(force){
 	var options = this._options;
 	if(options.response.headersSent){
@@ -102,16 +112,17 @@ Session.prototype.sessionFlush = function sessionFlush(){
 		throw new Error('database-session: session not start.');
 	}
 	var result = sessionChanged(this);
+	if(options.isNew){
+		result.set('key', options.name);
+		this.sessionFlushCookie();
+	}
+	
 	if(!result){
 		return;
 	}
 	result.set('lastActive', new Date);
 	
 	// console.log('sess flush isNew=%s isCookieExists=%s', options.isNew, options.isCookieExists)
-	if(options.isNew){
-		result.set('key', options.name);
-		this.sessionFlushCookie();
-	}
 	result.save().then(undefined, function (err){
 		console.error('database-session: flush database failed with error: ' + (err.stack || err.message || err));
 	});
@@ -208,7 +219,7 @@ Session.prototype.sessionStart = function sessionStart(newId){
 				for(var dbField in dbObj.attributes){
 					if(hasOwn.call(dbObj.attributes, dbField)){
 						var userKey = keyNameMap[dbField];
-						if(userKey){
+						if(userKey && !hasOwn.call(self, userKey)){
 							self[userKey] = dbObj.attributes[dbField];
 						}
 					}
