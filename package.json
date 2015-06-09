@@ -1,6 +1,6 @@
 {
 	"name"           : "lean-g-database-session",
-	"version"        : "0.0.3",
+	"version"        : "0.0.5",
 	"description"    : "database session for lean-g",
 	"author"         : "GongT <gongteng524702837@gmail.com>",
 	"scripts"        : {},

@@ -28,7 +28,7 @@ var sessionConfig = {
         signed: true,
         secure: false,
         httponly: true,
-        maxAge: 0
+        maxAge: 7
     }
 };
 var databaseName = 'SessionStorage';
@@ -47,7 +47,7 @@ app.use(require('lean-g-database-session')(databaseName, sessionConfig));
 * **signed:** 是否要对cookie进行签名，强烈建议设为默认的true。要注意是这个功能由 cookie-parser 的第一个参数提供（也就是变成了必填），详见文档。
 * **secure:** 是否只允许https请求传递cookie，如果设为true，那么普通http请求中将没有session
 * **httponly:** 是否允许javascript、flash等脚本访问这个cookie，因为id是随机字符串，通常不会需要js操作，所以建议设为默认的true
-* **maxAge:** cookie保存时间，**单位是天，单位是天，单位是天**，因为很重要所以说三遍，超过这个时间的session会自动作废。如果设为0，则用户关闭浏览器后session自动作废。
+* **maxAge:** cookie保存时间，**单位是天，单位是天**，因为很重要所以说两遍，超过这个时间的session会自动作废。如果设为0，则用户关闭浏览器后session自动作废。
 
 ### 3.API
 ##### session.sessionStart(newId)
