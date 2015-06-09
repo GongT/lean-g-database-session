@@ -2,9 +2,7 @@ module.exports = DataBaseSession;
 var onHeaders = require('on-headers');
 var extend = require('util')._extend;
 
-var Request = require('http').IncomingMessage.prototype;
 var hasOwn = Object.prototype.hasOwnProperty;
-var console = new Logger('SESSION');
 
 function DataBaseSession(database, _options){
 	if(!database){
